@@ -65,6 +65,7 @@ class fitfunc:
     ''' 
     initialize with 
     func = the fitfunction or a list of fitfunctions
+	fitfunc([pfit], x)
     tex = Latex expression for the function or a list of them
     '''
     def __init__(self, func, tex='fit function'):
