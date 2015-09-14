@@ -1,20 +1,20 @@
-from .helpers import *
+from helpers import *
 
 from matplotlib import pylab, mlab, pyplot
 from matplotlib.pyplot import *
 #from matplotlib.pyplot import axis, scatter
-#import numpy as np
+import numpy as np
 from numpy import linspace, array, asarray, arange, sqrt
 plt = pyplot
 
-#from IPython.display import display
-#from IPython.core.pylabtools import figsize, getfigs
+from IPython.display import display
+from IPython.core.pylabtools import figsize, getfigs
 
 from pylab import gcf, gca
 
 def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.5, 
                               minsearch=False, debug=False):
-    """
+    ''' 
     xlin: the peaks sit on a baseline. To fit the baseline, give one or multiple ranges
         in which there is no peak, but a baseline, e.g.
         xlin = [-6.0,-2.0,
@@ -24,7 +24,7 @@ def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.
     peak_reject: percent below which a peak is rejected. 1: maximum deviation of the curve 
                     from the linear fit
     minsearch: set True if you search for minima instead for maxima
-    """
+    '''
     resultx = []
     resulty = []
     
@@ -42,7 +42,7 @@ def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.
     #if debug: plot(xvals[minind], noisyy[minind], 'o', label='min')
 
     peaklimit = peak_reject*max(noisyy - lin(pf,xvals))
-    if debug: print('peaklimit:',peaklimit)
+    if debug: print 'peaklimit:',peaklimit
 
     if minsearch: 
         for i in minind:
@@ -61,15 +61,11 @@ def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.
     return resultx, resulty
 
 
-class Fitfunc:
+class fitfunc:
     ''' 
     initialize with 
     func = the fitfunction or a list of fitfunctions
-    fitfunction = f(parameter_list, xvalues)
     tex = Latex expression for the function or a list of them
-    
-    CHANGELOG: 
-    * classname fitfunc > Fitfunc
     '''
     def __init__(self, func, tex='fit function'):
         
@@ -85,7 +81,7 @@ class Fitfunc:
         if len(tex) == len(self.func): 
             self.tex = tex
         else: 
-            print('auto-tex! tex does not have the same length as func.')
+            print 'auto-tex! tex does not have the same length as func.'
             self.tex = [i for i in arange(len(self.func))]
 
     def errorfunc(self, pfit, x, y):
@@ -128,10 +124,10 @@ class Fitfunc:
         if not isinstance(y, list): y = [y]
             
         if len(x) == len(self.func): self.x = x
-        else: print('ERROR: len(x) != len(self.func)')
+        else: print 'ERROR: len(x) != len(self.func)'
             
         if len(y) == len(self.func): self.y = y
-        else: print('ERROR: len(y) != len(self.func)')
+        else: print 'ERROR: len(y) != len(self.func)'
         
         # hold, self.pfit
         
@@ -185,13 +181,16 @@ class Fitfunc:
         
         if solp[1] == None:
             ier = list([0 for i in arange(len(solpf))]) 
-            print('Jacobian is 0.0')
+            print 'Jacobian is 0.0'
         else:
+            ''' This is new! '''
             s_sq = (asarray(self.errorfunc(self.pfit, self.xdummy, self.ydummy))**2).sum() / (len(self.ydummy) - len(self.pfit))
             pcov = solp[1]
             pcov = pcov * s_sq
             ''' ...'''
             ier = list([sqrt(abs(pcov[i,i])) for i in arange(len(solpf))])
+        
+
         
         if self.hold != None:
         
@@ -275,7 +274,7 @@ class Fitfunc:
         colorcycle(len(self.x))
         
         for i, xvals in enumerate(self.x):
-            c = next(gca()._get_lines.color_cycle)
+            c = gca()._get_lines.color_cycle.next()
             
             if i == 0: 
                 scatter(self.x[i], self.y[i], s=30, alpha=data_alpha, label='data', color=c)
@@ -296,7 +295,7 @@ class Fitfunc:
         colorcycle(len(self.x))
         
         for i, xvals in enumerate(self.x):
-            c = next(gca()._get_lines.color_cycle)
+            c = gca()._get_lines.color_cycle.next()
             xsmooth = linspace(self.x[i][0], self.x[i][-1], NPOINTS)
             F1.plot(xsmooth, self.func[i](self.solp, xsmooth),
                      color = c,
@@ -339,7 +338,7 @@ class Fitfunc:
         colorcycle(len(self.xfit))
         
         for i, xvals in enumerate(self.xfit):
-            c = next(gca()._get_lines.color_cycle)
+            c = gca()._get_lines.color_cycle.next()
             err = abs(self.func[i](self.solp, self.xfit[i]) - self.yfit[i])
             plot(self.xfit[i], err, color=c)
             fill_between(self.xfit[i], err, color=c, alpha=.3)

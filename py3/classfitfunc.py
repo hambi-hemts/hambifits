@@ -189,6 +189,7 @@ class Fitfunc:
         else:
             s_sq = (asarray(self.errorfunc(self.pfit, self.xdummy, self.ydummy))**2).sum() / (len(self.ydummy) - len(self.pfit))
             pcov = solp[1]
+            self.pcov = pcov
             pcov = pcov * s_sq
             ''' ...'''
             ier = list([sqrt(abs(pcov[i,i])) for i in arange(len(solpf))])
@@ -196,7 +197,6 @@ class Fitfunc:
         if self.hold != None:
         
             for i in self.hold:
-                solpf.insert(i, self.p0[i])
                 ier.insert(i, 0.0)
         
         self.solp = solpf
@@ -207,6 +207,7 @@ class Fitfunc:
         #print reduced_chi_square
         
         return self.solp, self.ier
+        
     
     def chisquare(self):
         ''' returns chi, p '''
