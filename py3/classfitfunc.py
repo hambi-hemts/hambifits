@@ -12,9 +12,10 @@ plt = pyplot
 
 from pylab import gcf, gca
 
-def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.5, 
+def get_peaks_position_height(xvals, noisyy, xlin=[], sval=1.0, peak_reject=0.5, 
                               minsearch=False, debug=False):
     """
+    returns: results in x-values, results in y-values
     xlin: the peaks sit on a baseline. To fit the baseline, give one or multiple ranges
         in which there is no peak, but a baseline, e.g.
         xlin = [-6.0,-2.0,
@@ -28,7 +29,7 @@ def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.
     resultx = []
     resulty = []
     
-    LFit     = fitfunc(lin, r'$m \times x+b$')
+    LFit     = Fitfunc(lin, r'$m \times x+b$')
     if debug:
         if len(xlin) == 2:
             i0, i1 = get_range_ind(xvals,xlin[0], xlin[1])
