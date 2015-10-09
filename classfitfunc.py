@@ -61,7 +61,7 @@ def get_peaks_position_height(xvals, noisyy, xlin=None, sval=1.0, peak_reject=0.
     return resultx, resulty
 
 
-class fitfunc:
+class Fitfunc:
     ''' 
     initialize with 
     func = the fitfunction or a list of fitfunctions
