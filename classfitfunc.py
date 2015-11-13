@@ -66,6 +66,7 @@ class Fitfunc:
     initialize with 
     func = the fitfunction or a list of fitfunctions
     fitfunction = f(parameter_list, xvalues)
+    fitfunc([pfit], x)
     tex = Latex expression for the function or a list of them
     
     CHANGELOG: 
